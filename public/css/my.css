@@ -1,0 +1,18 @@
+#tables {
+    float:right;
+    width:70%;
+}
+
+#search_field {
+    float:left;
+    width:25%;
+}
+
+#content {
+    width:80%;
+    margin:20px auto;
+}
+
+#leftdiv {
+    width:50%;
+}
