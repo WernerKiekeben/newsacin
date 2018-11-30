@@ -36,6 +36,6 @@ class HomeController extends Controller
                     ->limit(10)
                     ->get();
 
-        return view('home')->with('news', $news);
+        return view('/home')->with('news', $news);
     }
 }

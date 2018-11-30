@@ -24,7 +24,11 @@
                         </tr>
                         @foreach($news as $new)
                             <tr>
-                                <td>{{$new->title}}</td>
+                                <td>
+                                    <a class="mylink text-center" href="/news/{{$new->id}}">
+                                        {{$new->title}}
+                                    </a>
+                                </td>
                                 <td>{{$new->publication}}</td>
                                 <td><a href="/news/{{$new->id}}/edit" class="btn btn-info">Edit</a></td>
                                 <td>

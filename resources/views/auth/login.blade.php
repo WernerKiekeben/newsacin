@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+@if(!Auth::user())
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -70,4 +71,10 @@
         </div>
     </div>
 </div>
+@else
+<div class="text-center">
+    <h1>You logged in!</h1>
+    <a href="/home" class="btn btn-primary"> Click here to go to your homepage</a>
+</div>
+@endif
 @endsection

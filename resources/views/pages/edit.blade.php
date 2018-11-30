@@ -1,7 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-
+<a href="{{url()->previous()}}" class="btn btn-secondary float-right">Go Back</a>
+<div class="clearfix"></div>
 <h1>Edit Post</h1>
 
 

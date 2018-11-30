@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+
 <br>
 <ul class="nav nav-tabs">
     <li class="nav-item">
@@ -17,13 +18,13 @@
     </div>
 
     <div id="tables">
-        <table class="table">
-            <thead class="thead-light">
+        <table class="table table-striped">
+            <thead class="thead">
                 <tr>
                     <th scope="col">Title</th>
                     <th scope="col">Date</th>
                     <th scope="col">State</th>
-                    <th colspan="2" class="text-center" scope="col">Action</th>
+                    <th colspan="2" class="text-center" scope="col">Actions</th>
                 </tr>
             </thead>
             @if(count($news) > 0)
@@ -31,23 +32,30 @@
                     @foreach($news as $new)
                         <tr>
                             <td>
-                                <a href="/new/{{$new->id}}">
+                                <a class="mylink text-center" href="/news/{{$new->id}}">
                                     {{$new->title}}
                                 </a>
                             </td>
                             <td>{{$new->publication}}</td>
                             <td>{{$new->description}}</td>
-                            <td>
-                                <a href="/news/{{$new->id}}/edit">
-                                    <i class="fas fa-edit fa-lg"></i>
-                                </a>
-                            </td>
-                            <td>
-                                {!!Form::open(['action' => ['NewsController@destroy', $new->id], 'method' => 'POST', 'class' => 'float-right'])!!}
-                                    {{Form::hidden('_method', 'DELETE')}}
-                                    {{Form::submit('Delete', ['class' => 'btn btn-danger'])}}
-                                {!!Form::close()!!}
-                            </td>
+                            {{-- Check for correct user --}}
+                            @if(Auth::id() == $new->idUser || Auth::user()->name == 'Admin')
+                                <td>
+                                    <a href="/news/{{$new->id}}/edit">
+                                        <i class="fas fa-edit fa-lg"></i>
+                                    </a>
+                                </td>
+                                <td>
+                                    {!!Form::open(['action' => ['NewsController@destroy', $new->id], 'method' => 'POST', 'class' => 'float-right'])!!}
+                                        {{Form::hidden('_method', 'DELETE')}}
+                                        {{ Form::button('<i class="fa fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-danger']) }}
+                                        {{-- {{Form::submit('Delete', ['class' => 'btn btn-danger'])}} --}}
+                                    {!!Form::close()!!}
+                                </td>
+                            @else
+                                <td></td>
+                                <td></td>
+                            @endif
                         </tr>
                     @endforeach
                 </tbody>

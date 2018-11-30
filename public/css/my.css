@@ -1,18 +1,48 @@
 #tables {
     float:right;
-    width:70%;
+    width:65%;
 }
 
 #search_field {
     float:left;
-    width:25%;
+    width:30%;
+    background: #bbc1cc;
+    padding: 5px 20px;
 }
 
 #content {
     width:80%;
-    margin:20px auto;
+    margin: 20px auto;
 }
 
 #leftdiv {
     width:50%;
+}
+
+@media only screen and (max-width: 990px) {
+    #search_field{
+        float:none;
+        width:100%;
+        margin:0 auto;
+        height:380px;
+    }
+
+    #search_field input, select, label {
+        height: 35px;
+    }
+
+    #search_field h1 {
+        font-size: 1.8em;
+        margin: 0.5em;
+    }
+    
+    #tables {
+        float:none;
+        width:100%;
+        margin:0 auto;
+    }
+}
+
+a.mylink {
+ 
 }

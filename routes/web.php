@@ -27,7 +27,7 @@ Route::get('/create', 'NewsController@getCreate');
 
 Route::post('/', 'NewsController@storeNews');
 
-Route::get('/new/{id}', 'NewsController@showNews');
+Route::get('/news/{id}', 'NewsController@showNews');
 
 Route::post('/postajax', 'NewsController@searchNews');
 

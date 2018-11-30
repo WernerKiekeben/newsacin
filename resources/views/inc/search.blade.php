@@ -13,10 +13,10 @@
 </div>
 <div class="form-group row">
     {{Form::label('state', 'State', ['class' => 'col-sm-2 col-form-label'])}}
-    {{Form::select('state', array('1' => 'Published', '2' => 'Unpublished'), null, ['class' => 'form-control'])}}
+    {{Form::select('state', array('' => 'Option', '1' => 'Published', '2' => 'Unpublished'), null, ['class' => 'form-control'])}}
 </div>
 <div class="form-group row float-right">
-    {{Form::Submit('Submit', ['class' => 'form-control btn btn-primary', 'id' => 'srchBtn'])}}
+    {{Form::Submit('Search', ['class' => 'form-control btn btn-primary', 'id' => 'srchBtn'])}}
 </div>
 
 {!! Form::close() !!}

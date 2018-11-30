@@ -21,18 +21,18 @@ $(document).ready(function(){
                     var state = response[i].description;
                     var id = response[i].id;
 
-                    var td1 = "<td><a href='/new/{{"+id+"}}'>"+title+"</a></td>";
+                    var td1 = "<td><a href='/news/"+id+"'>"+title+"</a></td>";
                     var td2 = "<td>"+date+"</td>";
                     var td3 = "<td>"+state+"</td>";
-                    var td4 = "<td>Edit / Delete </td>";
+                    var ed = '<td><a href="/news/'+id+'/edit"><i class="fas fa-edit fa-lg"></i></a></td>';
 
-                    tr += "<tr>" + td1 + td2 + td3 + td4 + "</tr>";                    
+                    tr += "<tr>" + td1 + td2 + td3 + ed + "</tr>";
                 }
                 $('.pagination').hide();
                 if(tr != ""){
                     $('tbody').html(tr);
                 } else {
-                    var nope = "<tr><td colspan='4' class='alert alert-warning text-center'>No Results Found :( </td></tr>";
+                    var nope = "<tr><td colspan='4' class='alert alert-warning text-center'>No Results Found</td></tr>";
                     $('tbody').html(nope);
                 }
             }

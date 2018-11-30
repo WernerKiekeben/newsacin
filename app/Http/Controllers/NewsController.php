@@ -49,12 +49,12 @@ class NewsController extends Controller
 
     public function getNews()
     {
-        // $news = NEWS::orderBy('created_at','desc')->paginate(5);
         $news = DB::table('news')
                     ->join('state', 'news.idState' ,'=', 'state.id')
                     ->select('news.*', 'state.description')
                     ->latest()
                     ->paginate(5);
+
         return view('pages.news')->with('news', $news);
     }
 
@@ -68,7 +68,7 @@ class NewsController extends Controller
         $new = News::find($id);
 
         // CHheck for correct user
-        if(Auth::id() !== $new->idUser){
+        if(Auth::id() !== $new->idUser && Auth::user()->name !== 'Admin'){
             return redirect('/news')->with('error', 'Unauthorized Access');
         }
 
@@ -190,7 +190,7 @@ class NewsController extends Controller
         $new = News::find($id);
         
         // CHheck for correct user
-        if(Auth::id() !== $new->idUser){
+        if(Auth::id() !== $new->idUser && Auth::user()->name !== 'Admin'){
             return redirect('/news')->with('error', 'Unauthorized Access');
         }
 
