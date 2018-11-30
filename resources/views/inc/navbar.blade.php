@@ -43,7 +43,7 @@
 
                                 {!!Form::open(['action' => ['NewsController@deleteUser',  Auth::id() ], 'method' => 'POST'])!!}
                                     {{Form::hidden('_method', 'DELETE')}}
-                                    {{Form::submit('Delete User', ['class' => 'dropdown-item text-danger'])}}
+                                    {{Form::submit('Delete User', ['class' => 'dropdown-item text-danger', 'onclick' => "return userConfunction();"])}}
                                 {!!Form::close()!!}
 
                             {{-- <a class="dropdown-item text-danger" href="{{route('remove')}}">

@@ -11,12 +11,16 @@
 }
 
 #content {
-    width:80%;
+    width:100%;
     margin: 20px auto;
 }
 
 #leftdiv {
     width:50%;
+}
+
+tbody tr:hover {
+    cursor: pointer;
 }
 
 @media only screen and (max-width: 990px) {
@@ -41,8 +45,4 @@
         width:100%;
         margin:0 auto;
     }
-}
-
-a.mylink {
- 
 }

@@ -37,8 +37,8 @@ class NewsController extends Controller
 
         // Create News
         $post = new News;
-        $post->title = $request->input('title');
-        $post->content = $request->input('body');
+        $post->title = strip_tags($request->input('title'));
+        $post->content = strip_tags($request->input('body'));
         $post->publication = \Carbon\Carbon::now();
         $post->idUser = Auth::id();
         $post->idState = $request->input('state');
@@ -52,8 +52,8 @@ class NewsController extends Controller
         $news = DB::table('news')
                     ->join('state', 'news.idState' ,'=', 'state.id')
                     ->select('news.*', 'state.description')
-                    ->latest()
-                    ->paginate(5);
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(8);
 
         return view('pages.news')->with('news', $news);
     }
@@ -84,9 +84,9 @@ class NewsController extends Controller
          ]);
 
          $new = NEWS::find($id);
-         $new->title = $request->input('title');
-         $new->content = $request->input('body');
-         $new->idState = $request->input('state');
+         $new->title = strip_tags($request->input('title'));
+         $new->content = strip_tags($request->input('body'));
+         $new->idState = strip_tags($request->input('state'));
          $new->save();
  
          return redirect('news')->with('success', 'News Updated');
@@ -107,7 +107,7 @@ class NewsController extends Controller
     {
         $result;
 
-        $title = $request->title;
+        $title = strip_tags($request->input('title'));
         $date = $request->date;
         $state = $request->state;
 
@@ -121,7 +121,7 @@ class NewsController extends Controller
                 ->where('news.idState', '=', $state )
                 ->where('news.publication', '=', $date )
                 ->latest()
-                ->get();
+                ->paginate(8);
         } elseif ($title != null && $date != null && $state == null)// If only state is null
         {
             $result = DB::table('news')
@@ -130,7 +130,7 @@ class NewsController extends Controller
                 ->where('news.title', 'like', '%'. $title .'%')
                 ->where('news.publication', '=', $date )
                 ->latest()
-                ->get();
+                ->paginate(8);
         } elseif ($title != null && $date == null && $state != null)// If only date is null
         {
             $result = DB::table('news')
@@ -139,7 +139,7 @@ class NewsController extends Controller
                 ->where('news.title', 'like', '%'. $title .'%')
                 ->where('news.idState', '=', $state )
                 ->latest()
-                ->get();
+                ->paginate(8);
         } elseif ($title == null && $date != null && $state != null)// If only title is null
         {
             $result = DB::table('news')
@@ -148,7 +148,7 @@ class NewsController extends Controller
                 ->where('news.idState', '=', $state )
                 ->where('news.publication', '=', $date )
                 ->latest()
-                ->get();
+                ->paginate(8);
         } elseif ($title == null && $date != null && $state == null)// If title and state are null
         {
             $result = DB::table('news')
@@ -156,7 +156,7 @@ class NewsController extends Controller
                 ->select('news.*', 'state.description')
                 ->where('news.publication', '=', $date )
                 ->latest()
-                ->get();
+                ->paginate(8);
         } elseif ($title == null && $date == null && $state != null)// If title and date are null
         {
             $result = DB::table('news')
@@ -164,7 +164,7 @@ class NewsController extends Controller
                 ->select('news.*', 'state.description')
                 ->where('news.idState', '=', $state )
                 ->latest()
-                ->get();
+                ->paginate(8);
         } elseif ($title != null && $date == null && $state == null)// If date and state are null
         {
             $result = DB::table('news')
@@ -172,14 +172,14 @@ class NewsController extends Controller
                 ->select('news.*', 'state.description')
                 ->where('news.title', 'like', '%'. $title .'%')
                 ->latest()
-                ->get();
+                ->paginate(8);
         } elseif ($title == null && $date == null && $state == null)// If all are null
         {
             $result = DB::table('news')
                 ->join('state', 'news.idState' ,'=', 'state.id')
                 ->select('news.*', 'state.description')
                 ->latest()
-                ->get();
+                ->paginate(8);
         }
 
         return $result;
@@ -202,6 +202,8 @@ class NewsController extends Controller
     public function deleteUser($id)
     {
         $user = Auth::user($id);
+
+        echo "<script> confirmation('Are you sure?') </script>";
 
         $user->delete();
 

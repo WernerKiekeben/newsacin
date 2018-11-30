@@ -18,8 +18,8 @@
     </div>
 
     <div id="tables">
-        <table class="table table-striped">
-            <thead class="thead">
+        <table class="table table-light table-hover">
+            <thead class="thead-light">
                 <tr>
                     <th scope="col">Title</th>
                     <th scope="col">Date</th>
@@ -30,26 +30,21 @@
             @if(count($news) > 0)
                 <tbody>
                     @foreach($news as $new)
-                        <tr>
-                            <td>
-                                <a class="mylink text-center" href="/news/{{$new->id}}">
-                                    {{$new->title}}
-                                </a>
-                            </td>
+                    <tr data-id="{{$new->id}}">
+                            <td class="firstTd" scope="row"> <strong>{{$new->title}}</strong> </td>
                             <td>{{$new->publication}}</td>
                             <td>{{$new->description}}</td>
                             {{-- Check for correct user --}}
                             @if(Auth::id() == $new->idUser || Auth::user()->name == 'Admin')
                                 <td>
-                                    <a href="/news/{{$new->id}}/edit">
+                                    <a class="btn btn-outline-info" href="/news/{{$new->id}}/edit">
                                         <i class="fas fa-edit fa-lg"></i>
                                     </a>
                                 </td>
                                 <td>
                                     {!!Form::open(['action' => ['NewsController@destroy', $new->id], 'method' => 'POST', 'class' => 'float-right'])!!}
                                         {{Form::hidden('_method', 'DELETE')}}
-                                        {{ Form::button('<i class="fa fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-danger']) }}
-                                        {{-- {{Form::submit('Delete', ['class' => 'btn btn-danger'])}} --}}
+                                        {{Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-outline-danger', 'onclick' => "return confunction();"])}}
                                     {!!Form::close()!!}
                                 </td>
                             @else
@@ -60,7 +55,7 @@
                     @endforeach
                 </tbody>
             </table>
-            {{$news->links()}}
+            {{ $news->appends(\Request::except('_token'))->render() }}
             @else
                 <tr>
                     <td colspan="4" class="alert alert-warning text-center">

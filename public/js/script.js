@@ -15,20 +15,33 @@ $(document).ready(function(){
             success: function(response) {
                 var tr = "";
 
-                for(var i = 0; i < response.length; i++){
-                    var title = response[i].title;
-                    var date = response[i].publication;
-                    var state = response[i].description;
-                    var id = response[i].id;
+                console.log(response);
 
-                    var td1 = "<td><a href='/news/"+id+"'>"+title+"</a></td>";
+                for(var i = 0; i < response.data.length; i++){
+                    var title = response.data[i].title;
+                    var date = response.data[i].publication;
+                    var state = response.data[i].description;
+                    var id = response.data[i].id;
+
+                    var td1 = "<td>"+title+"</td>";
                     var td2 = "<td>"+date+"</td>";
                     var td3 = "<td>"+state+"</td>";
-                    var ed = '<td><a href="/news/'+id+'/edit"><i class="fas fa-edit fa-lg"></i></a></td>';
+                    var ed  = '<td><a class="btn btn-outline-info" href="/news/'+id+'/edit"><i class="fas fa-edit fa-lg"></i></a></td>';
+                    var del = `
+                    <td>
+                    <form method="POST" action="destroy/${id}" accept-charset="UTF-8" class="float-right">
+                        <input name="_token" type="hidden" value="`+CSRF_TOKEN+`">
+                        <input name="_method" type="hidden" value="DELETE">
+                        <button type="submit" class="btn btn-outline-danger" onclick="return confunction();"><i class="fa fa-trash"></i></button>
+                    </form>
+                    </td>
+                    `;
 
-                    tr += "<tr>" + td1 + td2 + td3 + ed + "</tr>";
+                    td4 = ed + del;
+
+                    tr += "<tr>" + td1 + td2 + td3 + td4 + "</tr>";
                 }
-                $('.pagination').hide();
+                // $('.pagination').hide();
                 if(tr != ""){
                     $('tbody').html(tr);
                 } else {
@@ -38,4 +51,26 @@ $(document).ready(function(){
             }
         });
     });
+
+    $('.firstTd').click(function(){
+        var id = $(this).closest('tr').data('id');
+        var href = "/news/" + id;
+        window.open(href, '_self');
+    });
 });
+
+function confunction(){
+    if (confirm('Are you sure? You can not undo this action!')){
+        return true;
+    } else {
+        return false;
+    }
+};
+
+function userConfunction(){
+    if (confirm('Are you sure you want to delete you account? You can not undo this action!')){
+        return true;
+    } else {
+        return false;
+    }
+};

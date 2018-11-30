@@ -15,29 +15,46 @@
                     @endif
 
                     <h1>Your 10 most recent news!</h1>
-                    <table class="table table-striped">
-                        <tr>
-                            <th>Title</th>
-                            <th>Date</th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                        @foreach($news as $new)
+                    <table class="table table-light table-hover">
+                        <thead class="thead-light">
                             <tr>
-                                <td>
-                                    <a class="mylink text-center" href="/news/{{$new->id}}">
-                                        {{$new->title}}
-                                    </a>
-                                </td>
-                                <td>{{$new->publication}}</td>
-                                <td><a href="/news/{{$new->id}}/edit" class="btn btn-info">Edit</a></td>
+                                <th scope="col">Title</th>
+                                <th scope="col">Date</th>
+                                <th scope="col"></th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        @foreach($news as $new)
+                        <tbody>
+                            <tr data-id="{{$new->id}}">
+                                <td class="firstTd" scope="row"> <strong>{{$new->title}}</strong> </td>
+                                <td> {{$new->publication}} </td>
+                                {{-- Check for correct user --}}
+                                @if(Auth::id() == $new->idUser)
+                                    <td>
+                                        <a class="btn btn-outline-info" href="/news/{{$new->id}}/edit">
+                                            <i class="fas fa-edit fa-lg"></i>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        {!!Form::open(['action' => ['NewsController@destroy', $new->id], 'method' => 'POST', 'class' => 'float-right'])!!}
+                                            {{Form::hidden('_method', 'DELETE')}}
+                                            {{Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-outline-danger', 'onclick' => "return confunction();"])}}
+                                        {!!Form::close()!!}
+                                    </td>
+                                @else
+                                    <td></td>
+                                    <td></td>
+                                @endif
+{{--                                 <td><a href="/news/{{$new->id}}/edit" class="btn btn-info">Edit</a></td>
                                 <td>
                                     {!!Form::open(['action' => ['NewsController@destroy', $new->id], 'method' => 'POST', 'class' => 'float-right'])!!}
                                         {{Form::hidden('_method', 'DELETE')}}
-                                        {{Form::submit('Delete', ['class' => 'btn btn-danger'])}}
+                                        {{Form::submit('Delete', ['class' => 'btn btn-danger', 'onclick' => "return confunction();"])}}
                                     {!!Form::close()!!}
                                 </td>
-                            </tr>
+                            </tr> --}}
+                        </tbody>
                         @endforeach
                     </table>
                 </div>
