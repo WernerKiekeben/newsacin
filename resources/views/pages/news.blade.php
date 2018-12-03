@@ -55,7 +55,7 @@
                     @endforeach
                 </tbody>
             </table>
-            {{ $news->appends(\Request::except('_token'))->render() }}
+            {!! $news->links() !!}
             @else
                 <tr>
                     <td colspan="4" class="alert alert-warning text-center">

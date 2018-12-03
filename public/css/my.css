@@ -3,6 +3,24 @@
     width:65%;
 }
 
+table tr td{
+    height:50px;
+}
+
+table td .btn {
+    padding:0 6px;
+}
+
+table a {
+    text-decoration: none;
+    color:black;
+}
+
+table a:hover {
+    text-decoration: none;
+    color:black;
+}
+
 #search_field {
     float:left;
     width:30%;
@@ -17,10 +35,40 @@
 
 #leftdiv {
     width:50%;
+    float:left;
+}
+
+#rightDiv {
+    width:50%;
+    padding:75px;
+    float:right;
+    height:200px;
 }
 
 tbody tr:hover {
     cursor: pointer;
+}
+
+.modal-body {
+    background:#e1e1e1;
+    min-height:300px;
+}
+
+@media only screen and (max-width: 768px) {
+    #leftdiv, #rightDiv {
+        float:none;
+        height:200px;
+        width:100%;
+        padding:10px;
+    }
+
+    #rightDiv {
+        height:75px;
+    }
+
+    #removable{
+        display: none;
+    }
 }
 
 @media only screen and (max-width: 990px) {
