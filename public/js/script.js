@@ -66,7 +66,6 @@ $(document).on('click', '.pagination a', function(e){
             data.state = state;
         }
 
-
         var page = href.split('page=')[1];
 
         url += "&page="+page;
