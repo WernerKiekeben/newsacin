@@ -14,11 +14,12 @@ table td .btn {
 table a {
     text-decoration: none;
     color:black;
+    cursor: pointer;
 }
 
 table a:hover {
     text-decoration: none;
-    color:black;
+    color:rgb(108, 184, 180);
 }
 
 #search_field {
@@ -43,10 +44,6 @@ table a:hover {
     padding:75px;
     float:right;
     height:200px;
-}
-
-tbody tr:hover {
-    cursor: pointer;
 }
 
 .modal-body {

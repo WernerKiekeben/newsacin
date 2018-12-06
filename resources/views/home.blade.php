@@ -27,7 +27,11 @@
                         @foreach($news as $new)
                         <tbody>
                             <tr data-id="{{$new->id}}">
-                                <td class="firstTd" scope="row"> <strong>{{$new->title}}</strong> </td>
+                                <td scope="row">
+                                    <a href="/news/{{$new->id}}">
+                                        <strong>{{$new->title}}</strong> 
+                                    </a>
+                                </td>
                                 <td> {{$new->publication}} </td>
                                 {{-- Check for correct user --}}
                                 @if(Auth::id() == $new->idUser)
@@ -46,14 +50,6 @@
                                     <td></td>
                                     <td></td>
                                 @endif
-{{--                                 <td><a href="/news/{{$new->id}}/edit" class="btn btn-info">Edit</a></td>
-                                <td>
-                                    {!!Form::open(['action' => ['NewsController@destroy', $new->id], 'method' => 'POST', 'class' => 'float-right'])!!}
-                                        {{Form::hidden('_method', 'DELETE')}}
-                                        {{Form::submit('Delete', ['class' => 'btn btn-danger', 'onclick' => "return confunction();"])}}
-                                    {!!Form::close()!!}
-                                </td>
-                            </tr> --}}
                         </tbody>
                         @endforeach
                     </table>

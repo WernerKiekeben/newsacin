@@ -1,77 +1,23 @@
 $(document).ready(function(){
-
-    /* $('.pagination a').click(function(e){
-        e.preventDefault();
-        var page = $(this).attr('href').split('page=')[1];
-
-        getNews(page);
-    });
-
-    function getNews(page){
-        console.log('getting page: '+page);
-    }
- */
     $('#srchBtn').click(function(e){
         e.preventDefault();
         var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+
+        var url ='/postajax';
         
-        var title = $('#title').val();
-        var date = $('#date').val();
-        var state = $('#state').val();
+        var [title, date, state] = values();
 
-        $.ajax({
-            url:'/postajax',
-            type:'POST',
-            data: {_token: CSRF_TOKEN, title:title, date:date, state:state},
-            dataType:'JSON',
-            success: function(response) {
-                var tr = "";
+        data = {
+            _token: CSRF_TOKEN,
+            title:title,
+            date:date,
+            state:state
+        };
 
-                for(var i = 0; i < response.data.length; i++){
-                    var title = response.data[i].title;
-                    var date = response.data[i].publication;
-                    var state = response.data[i].description;
-                    var id = response.data[i].id;
-
-                    var td1 = "<td class='firstTd' scope='row'><a href='/news/"+id+"'><strong>"+title+"</strong></a> </td>";
-                    var td2 = "<td>"+date+"</td>";
-                    var td3 = "<td>"+state+"</td>";
-                    var ed  = '<td><a class="btn btn-outline-info" href="/news/'+id+'/edit"><i class="fas fa-edit fa-lg"></i></a></td>';
-                    var del = `
-                    <td>
-                    <form method="POST" action="destroy/${id}" accept-charset="UTF-8" class="float-right">
-                        <input name="_token" type="hidden" value="`+CSRF_TOKEN+`">
-                        <input name="_method" type="hidden" value="DELETE">
-                        <button type="submit" class="btn btn-outline-danger" onclick="return confunction();"><i class="fa fa-trash"></i></button>
-                    </form>
-                    </td>
-                    `;
-
-                    td4 = ed + del;
-
-                    tr += "<tr data-id="+id+">" + td1 + td2 + td3 + td4 + "</tr>";
-                }
-                // $('.pagination').hide();
-                if(tr != ""){
-                    $('tbody').html(tr);
-                } else {
-                    var noRes = "<tr><td colspan='4' class='alert alert-warning text-center'>No Results Found</td></tr>";
-                    $('tbody').html(noRes);
-                }
-            },
-            error: function(){
-                alert("Some error ocurred");
-            }
-        });
-    
+        ajaxRequest(url, data);
     });
 
-    $('.firstTd').click(function(){
-        var id = $(this).closest('tr').data('id');
-        var href = "/news/" + id;
-        window.open(href, '_self');
-    });
-
+    // to preview the news before posting
     $('#prev').click(function(){
         var title = stripHTML($('#title').val());
         console.log(title);
@@ -89,10 +35,84 @@ $(document).ready(function(){
     });
 });
 
-$("td").on("click", "td.firstTd", function(){
-    alert('you clicked me!');
+$(document).on('click', '.pagination a', function(e){
+    e.preventDefault();
+    if($(this).attr('href').includes("ajax")){
+
+        var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+        var data = {_token:CSRF_TOKEN};
+
+        var [title, date, state] = values();
+
+        var t = "title";
+        var d = "date";
+        var s = "state";
+
+        var url ="/ajax/search?";
+
+        var href = $(this).attr('href');
+
+        // checks if href in pagination contains search criteria and modifies data and url accordingly
+        if(href.includes(t)){
+            url += "title="+title;
+            data.title = title;
+        }
+        if(href.includes(d)){
+            url += "&date="+date;
+            data.date = date;
+        }
+        if(href.includes(s)){
+            url += "&state="+state;
+            data.state = state;
+        }
+
+
+        var page = href.split('page=')[1];
+
+        url += "&page="+page;
+
+        ajaxRequest(url, data);
+    } else {
+        var href = $(this).attr('href');
+        var page = href.split('page=')[1];
+
+        getNews(page);
+    };
 });
 
+function getNews(page){
+    $.ajax({
+        url: '/jax/news?page='+page,
+        success:function(response){
+            $('#tables').html(response);
+        }
+    });
+}
+
+function ajaxRequest(url, data){
+    $.ajax({
+        url:url,
+        data:data,
+        success:function(response) {
+            $('#tables').html(response);
+        },
+        error: function(response){
+            console.log(response);
+            alert("Some error ocurred");
+        }
+    });
+};
+
+// returns array with field values
+function values(){
+    var title = $('#title').val();
+    var date = $('#date').val();
+    var state = $('#state').val();
+
+    return [title, date, state];
+};
+
+// confirm if user wants to delete news
 function confunction(){
     if (confirm('Are you sure? You can not undo this action!')){
         return true;
@@ -101,6 +121,7 @@ function confunction(){
     }
 };
 
+// confirm if user wants to delete account
 function userConfunction(){
     if (confirm('Are you sure you want to delete you account? You can not undo this action!')){
         return true;
@@ -109,7 +130,8 @@ function userConfunction(){
     }
 };
 
+// to strip input passed as argument from tags
 function stripHTML(text){
     var regex = /(<([^>]+)>)/ig;
     return text.replace(regex, "");
-}
+};

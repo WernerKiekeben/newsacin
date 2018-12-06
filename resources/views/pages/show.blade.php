@@ -9,8 +9,10 @@
 <hr>
 <small>Created at {{$new[0]->created_at}}, by {{$new[0]->name}}</small>
 <br>
+@if(Auth::id() == $new[0]->idUser || Auth::user()->name == 'Admin')
 {!!Form::open(['action' => ['NewsController@destroy', $new[0]->id], 'method' => 'POST', 'class' => 'float-right'])!!}
     {{Form::hidden('_method', 'DELETE')}}
     {{Form::submit('Delete', ['class' => 'btn btn-danger', 'onclick' => "return confunction();"])}}
 {!!Form::close()!!}
+@endif
 @endsection

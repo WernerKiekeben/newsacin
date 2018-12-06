@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use App\News;
 use Auth;
 use DB;
@@ -53,7 +54,17 @@ class NewsController extends Controller
                     ->orderBy('created_at', 'desc')
                     ->paginate(8);
 
-        return view('pages.news')->with('news', $news);
+        return view('pages.news')->with('result', $news);
+    }
+
+    public function newsAjax(){
+        $news = DB::table('news')
+                    ->join('state', 'news.idState' ,'=', 'state.id')
+                    ->select('news.*', 'state.description')
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(8);
+
+        return view('inc.table')->with('result', $news);
     }
 
     public function getCreate()
@@ -103,81 +114,23 @@ class NewsController extends Controller
 
     public function searchNews(Request $request)
     {
-        $title = strip_tags($request->input('title'));
-        $date = $request->date;
+        $title = strip_tags($request->title);
+        $date = '0001-01-01';
+        if($request->date){
+            $date = $request->date;
+        }
         $state = $request->state;
 
-        if($title != null && $date != null && $state != null)// If all parameters are NOT null
-        {    
-            $result = DB::table('news')
-                ->join('state', 'news.idState' ,'=', 'state.id')
-                ->select('news.*', 'state.description')
-                ->where('news.title', 'like', '%'. $title .'%')
-                ->where('news.idState', '=', $state )
-                ->where('news.publication', '=', $date )
-                ->latest()
-                ->paginate(7);
-        } elseif ($title != null && $date != null && $state == null)// If only state is null
-        {
-            $result = DB::table('news')
-                ->join('state', 'news.idState' ,'=', 'state.id')
-                ->select('news.*', 'state.description')
-                ->where('news.title', 'like', '%'. $title .'%')
-                ->where('news.publication', '=', $date )
-                ->latest()
-                ->paginate(7);
-        } elseif ($title != null && $date == null && $state != null)// If only date is null
-        {
-            $result = DB::table('news')
-                ->join('state', 'news.idState' ,'=', 'state.id')
-                ->select('news.*', 'state.description')
-                ->where('news.title', 'like', '%'. $title .'%')
-                ->where('news.idState', '=', $state )
-                ->latest()
-                ->paginate(7);
-        } elseif ($title == null && $date != null && $state != null)// If only title is null
-        {
-            $result = DB::table('news')
-                ->join('state', 'news.idState' ,'=', 'state.id')
-                ->select('news.*', 'state.description')
-                ->where('news.idState', '=', $state )
-                ->where('news.publication', '=', $date )
-                ->latest()
-                ->paginate(7);
-        } elseif ($title == null && $date != null && $state == null)// If title and state are null
-        {
-            $result = DB::table('news')
-                ->join('state', 'news.idState' ,'=', 'state.id')
-                ->select('news.*', 'state.description')
-                ->where('news.publication', '=', $date )
-                ->latest()
-                ->paginate(7);
-        } elseif ($title == null && $date == null && $state != null)// If title and date are null
-        {
-            $result = DB::table('news')
-                ->join('state', 'news.idState' ,'=', 'state.id')
-                ->select('news.*', 'state.description')
-                ->where('news.idState', '=', $state )
-                ->latest()
-                ->paginate(7);
-        } elseif ($title != null && $date == null && $state == null)// If date and state are null
-        {
-            $result = DB::table('news')
-                ->join('state', 'news.idState' ,'=', 'state.id')
-                ->select('news.*', 'state.description')
-                ->where('news.title', 'like', '%'. $title .'%')
-                ->latest()
-                ->paginate(7);
-        } elseif ($title == null && $date == null && $state == null)// If all are null
-        {
-            $result = DB::table('news')
-                ->join('state', 'news.idState' ,'=', 'state.id')
-                ->select('news.*', 'state.description')
-                ->latest()
-                ->get();
-        }
+        $result = News::where([
+            ['title','LIKE','%'.$title.'%'],
+            ['publication','>=', $date],
+            ['idState','=',$state],
+        ])->join('state', 'news.idState' ,'=', 'state.id')
+        ->select('news.*', 'state.description')
+        ->latest()
+        ->paginate(8);
 
-        return response()->json($result);
+        return view('inc.table')->with('result',$result);
     }
 
     public function destroy($id) // Destroys news through id
@@ -197,8 +150,6 @@ class NewsController extends Controller
     public function deleteUser($id)
     {
         $user = Auth::user($id);
-
-        echo "<script> confirmation('Are you sure?') </script>";
 
         $user->delete();
 

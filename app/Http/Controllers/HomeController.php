@@ -31,9 +31,8 @@ class HomeController extends Controller
                     ->join('state', 'news.idState' ,'=', 'state.id')
                     ->select('news.*', 'state.description')
                     ->where('news.idUser', '=', Auth::id())
-                    ->latest()
-                    ->orderBy('created_at','desc')
                     ->limit(10)
+                    ->orderBy('publication','desc')
                     ->get();
 
         return view('/home')->with('news', $news);

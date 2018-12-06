@@ -29,7 +29,11 @@ Route::post('/', 'NewsController@storeNews');
 
 Route::get('/news/{id}', 'NewsController@showNews');
 
-Route::post('/postajax', 'NewsController@searchNews');
+Route::get('/ajax/search', 'NewsController@searchNews');
+
+Route::get('/postajax', 'NewsController@searchNews');
+
+Route::get('jax/news', 'NewsController@newsAjax');
 
 Auth::routes();
 
